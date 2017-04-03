@@ -1,9 +1,7 @@
 *.iml
 .gradle/
 build/
-<<<<<<< HEAD
 drm-test
 =======
 newman/
 env.json
->>>>>>> f18b0dbb4dfbad8787668d96d043fb41d885130a
