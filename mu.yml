@@ -14,7 +14,7 @@ service:
     - /bananas
   pipeline:
     source:
-      repo: stelligent/microservice-exemplar
+      repo: dmurawsky/microservice-exemplar
       branch: mu
     build:
       image: aws/codebuild/java:openjdk-8
