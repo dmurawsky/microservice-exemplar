@@ -1,31 +1,39 @@
 group = 'stelligent'
 version = '0.0.1-SNAPSHOT'
 
-ext {
-    region    = project.hasProperty('region')    ? project.getProperty('region')    : 'us-west-2'
-    qualifier = project.hasProperty('qualifier') ? project.getProperty('qualifier') : 'develop'
-    keyName   = project.hasProperty('keyName')   ? project.getProperty('keyName')   : null
-    stackBaseName = project.hasProperty('stackBaseName') ? project.getProperty('stackBaseName') : "${project.name}-${project.qualifier}"
-}
 
-task platformUp(type: StackUpTask) {
-    group 'AWS'
-    description "Deploys platform stack '${project.stackBaseName}-platform' environment to AWS"
-    region project.region
-    stackName "${project.stackBaseName}-platform"
-    template file("ecs-resources/platform.template")
-    waitForComplete true
-    capabilityIam true
-    if(project.hasProperty('keyName')) {
-        stackParams['KeyName'] = project.keyName
-    } else {
-        stackParams['KeyName'] = null
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
-task platformDown(type: StackDownTask) {
-    group 'AWS'
-    description "Undeploys platform stack '${project.stackBaseName}-platform' environment on AWS"
-    region project.region
-    stackName "${project.stackBaseName}-platform"
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
 }
+
+jar.archiveName "banana-service.jar"
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.springframework.boot:spring-boot-starter-hateoas")
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
