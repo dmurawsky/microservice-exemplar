@@ -2,6 +2,5 @@
 .gradle/
 build/
 drm-test3
-=======
 newman/
 env.json
